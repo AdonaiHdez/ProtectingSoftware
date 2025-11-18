@@ -1,0 +1,116 @@
+/* === CONTENEDOR GENERAL === */
+.proyectos-container {
+  max-width: 1100px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.proyectos-container h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e3945;
+}
+
+/* === WRAPPER (sombra, bordes, fondo) === */
+.tabla-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px #1e3945 (0, 0, 0, 0.12);
+}
+
+/* === TABLA === */
+.proyectos-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* === ENCABEZADOS === */
+.proyectos-table thead th {
+  background: #7aa8d0; /* Color morado como ejemplo */
+  color: white;
+  padding: 14px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* === FILAS === */
+.proyectos-table tbody tr {
+  background: #ffffff;
+}
+
+.proyectos-table tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+/* === CELDAS === */
+.proyectos-table td {
+  padding: 14px;
+  border-bottom: 1px solid #ececec;
+  font-size: 15px;
+  color: #1e3945;
+}
+
+/* Última fila sin borde */
+.proyectos-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover */
+.proyectos-table tbody tr:hover {
+  background: #eef0ff;
+}
+
+/* === BOTONES DEBAJO DE LA TABLA === */
+.tabla-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.tabla-buttons button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+/* BOTÓN PRINCIPAL */
+.btn-primary {
+  background: #7aa8d0;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #658bad;
+}
+
+/* SECUNDARIO */
+.btn-secondary {
+  background: #7aa8d0;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #658bad;
+}
+
+/* PELIGRO */
+.btn-danger {
+  background: #7aa8d0;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #658bad;
+}
+

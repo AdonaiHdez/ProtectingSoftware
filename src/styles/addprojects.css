@@ -1,0 +1,72 @@
+.addproject-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.addproject-card {
+  width: 450px;
+  background: #fff;
+  padding: 30px 35px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+}
+
+.addproject-card h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.addproject-card label {
+  font-size: 14px;
+  margin-top: 12px;
+  display: block;
+  font-weight: 500;
+}
+
+.addproject-card input[type="text"],
+.addproject-card textarea,
+.addproject-card select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.addproject-card textarea {
+  height: 90px;
+  resize: none;
+}
+
+.addproject-card input:focus,
+.addproject-card textarea:focus,
+.addproject-card select:focus {
+  border-color: #6fa8d8;
+}
+
+.addproject-card input[type="file"] {
+  margin: 10px 0 20px 0;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: #6fa8d8;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-submit:hover {
+  background: #5b97c7;
+}
