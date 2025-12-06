@@ -112,7 +112,7 @@ export default function EditProject() {
         ></textarea>
 
         {/* Tabla de usuarios asignados */}
-        <h3 className="sub-title">Assigned users</h3>
+        <h3 className="sub-title">Assigned developers</h3>
 
         <div className="tabla-wrapper">
           <table className="users-table">
@@ -176,17 +176,17 @@ export default function EditProject() {
           className="add-user-btn"
           onClick={() => setShowModal(true)}
         >
-          Add user
+          Add developer
         </button>
 
         {/* ---- NUEVA TABLA DE HISTORIAL DE CAMBIOS ---- */}
-        <h3 className="sub-title">Historial de cambios</h3>
+        <h3 className="sub-title">Change history</h3>
 
         <div className="tabla-wrapper">
           <table className="users-table">
             <thead>
               <tr>
-                <th>User</th>
+                <th>Developer</th>
                 <th>Email</th>
                 <th>Fecha</th>
                 <th>Archivo</th>
@@ -227,7 +227,7 @@ export default function EditProject() {
         <div className="modal-overlay">
           <div className="modal-box">
 
-            <h3>Add user</h3>
+            <h3>Add developer</h3>
 
             <label>Select user</label>
             <select

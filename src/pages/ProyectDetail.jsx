@@ -79,7 +79,7 @@ export default function ProjectDetail() {
         <table className="historial-table">
           <thead>
             <tr>
-              <th>User</th>
+              <th>Developer</th>
               <th>Email</th>
               <th>File</th>
               <th>Date</th>

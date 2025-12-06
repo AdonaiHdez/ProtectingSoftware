@@ -17,7 +17,7 @@ export default function AddProject() {
 
         <label>Assign user</label>
         <select>
-          <option value="">Select user…</option>
+          <option value="">Select developer…</option>
           <option>@PandaKiller</option>
           <option>@hdez.ado</option>
           <option>@angel_grx</option>
