@@ -1,0 +1,124 @@
+/* === WRAPPER DEL CARD === */
+.addproject-card {
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(3px);
+  padding: 35px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+  width: 800px;
+  margin: auto;
+}
+
+/* === TITULO PRINCIPAL === */
+.addproject-card h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1e3945;
+  margin-bottom: 25px;
+}
+
+/* === Inputs === */
+.addproject-card input[type="text"],
+.addproject-card textarea {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  width: 100%;
+  transition: .2s;
+}
+
+.addproject-card input:focus,
+.addproject-card textarea:focus {
+  border-color: #7aa8d0;
+}
+
+/* === TABLA DE USUARIOS === */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Encabezados */
+.users-table thead th {
+  background: #7aa8d0;
+  color: white;
+  padding: 14px;
+  text-align: left;
+  font-size: 15px;
+}
+
+/* Filas */
+.users-table tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+.users-table tbody tr:hover {
+  background: #eef0ff;
+}
+
+/* Celdas */
+.users-table td {
+  padding: 14px;
+  border-bottom: 1px solid #ececec;
+  color: #1e3945;
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+/* Última fila sin borde */
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Botón remove */
+.remove-btn {
+  background: #e57373;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-btn:hover {
+  background: #d86060;
+}
+
+/* Botón Add User */
+.add-user-btn {
+  margin-top: 15px;
+  padding: 10px 16px;
+  background: #7aa8d0;
+  border: none;
+  color: white;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-user-btn:hover {
+  background: #658bad;
+}
+
+/* Save Button */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: #7aa8d0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 30px;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background: #658bad;
+}

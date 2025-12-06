@@ -1,8 +1,6 @@
 import "../styles/proyectos.css";
 import { Link } from "react-router-dom";
 
-
-
 export default function Proyectos() {
   return (
     <div className="proyectos-container">
@@ -20,32 +18,47 @@ export default function Proyectos() {
 
           <tbody>
             <tr>
-              <td>Practica03</td>
+              <td>
+                <Link className="project-link" to="/editproject/Practica03">
+                  Practica03
+                </Link>
+              </td>
               <td>@PandaKiller</td>
               <td>View, Download and Edit</td>
             </tr>
+
             <tr>
-              <td>FirstSteps</td>
+              <td>
+                <Link className="project-link" to="/editproject/FirstSteps">
+                  FirstSteps
+                </Link>
+              </td>
               <td>@hdez.ado</td>
               <td>View</td>
             </tr>
+
             <tr>
-              <td>TT01</td>
+              <td>
+                <Link className="project-link" to="/editproject/TT01">
+                  TT01
+                </Link>
+              </td>
               <td>@angel_grx</td>
-              <td>view, Download</td>
+              <td>View, Download</td>
             </tr>
           </tbody>
         </table>
-        
       </div>
-              <div className="tabla-buttons">
-          <Link to="/addproject">
-            <button className="btn-primary">Add project</button>
-          </Link>
-          <button className="btn-primary">Add user</button>
-          <button className="btn-secondary">Assign permissions</button>
-          <button className="btn-danger">Delete project</button>
-        </div>
+
+      <div className="tabla-buttons">
+        <Link to="/addproject">
+          <button className="btn-primary">Add project</button>
+        </Link>
+
+        <button className="btn-primary">Add user</button>
+        <button className="btn-secondary">Assign permissions</button>
+        <button className="btn-danger">Delete project</button>
+      </div>
     </div>
   );
 }

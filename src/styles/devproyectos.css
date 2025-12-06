@@ -1,0 +1,97 @@
+/* === CONTENEDOR GENERAL DEL DESARROLLADOR === */
+.dev-container {
+  max-width: 1100px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.dev-container h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e3945;
+}
+
+/* === WRAPPER === */
+.dev-table-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* === TABLA === */
+.dev-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* === ENCABEZADOS === */
+.dev-table thead th {
+  background: #7aa8d0;
+  color: white;
+  padding: 14px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* === FILAS === */
+.dev-table tbody tr {
+  background: #ffffff;
+}
+
+.dev-table tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+/* === CELDAS === */
+.dev-table td {
+  padding: 14px;
+  border-bottom: 1px solid #ececec;
+  font-size: 15px;
+  color: #1e3945;
+}
+
+/* Última fila sin borde */
+.dev-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover fila */
+.dev-table tbody tr:hover {
+  background: #eef0ff;
+}
+
+/* === ENLACES DEL NOMBRE DEL PROYECTO === */
+.dev-project-link {
+  color: #1e3945;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dev-project-link:hover {
+  text-decoration: underline;
+}
+
+/* === ESTILO PARA LA CELDA DEL VALIDADOR === */
+.validador-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #2e2e2e;
+}
+
+.validador-cell span:first-child {
+  font-weight: 600;
+  color: #1e3945;
+}
+
+.validador-empty {
+  font-style: italic;
+  color: #777;
+}

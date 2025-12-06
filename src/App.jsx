@@ -6,8 +6,9 @@ import Footer from "./components/Footer";
 import Proyectos from "./pages/Proyectos";
 import AddProject from "./pages/AddProject";
 import ContactUs from "./pages/ContactUs";
-
-
+import EditProject from "./pages/EditProject";
+import MisProyectosDev from "./pages/MisProyectos";
+import ProjectDetail from "./pages/ProyectDetail";
 function App() {
   return (
     <>
@@ -20,6 +21,9 @@ function App() {
         <Route path="/proyectos" element={<Proyectos />} />
         <Route path="/contactus" element={<ContactUs/>} />
         <Route path="/addproject" element={<AddProject />} />
+        <Route path="/editproject/:projectName" element={<EditProject />} />
+        <Route path="/dev/projects" element={<MisProyectosDev/>} />
+        <Route path="/dev/project/:projectName" element={<ProjectDetail />} />
       </Routes>
 
       <Footer />
