@@ -1,46 +1,267 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/addprojects.css";
 import "../styles/editproject.css";
 
 export default function EditProject() {
 
-  const { projectName } = useParams();
+  const { projectName } = useParams(); // Este es el projectId
 
-  const [name, setName] = useState(projectName);
-  const [description, setDescription] = useState("Proyecto de ejemplo.");
-
-  const [assignedUsers, setAssignedUsers] = useState([
-    { username: "@PandaKiller", view: true, download: true, upload: true },
-    { username: "@angel_grx", view: true, download: false, upload: false },
-  ]);
-  const [confirmData, setConfirmData] = useState(null);  // Guarda el cambio que se quiere validar
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [assignedUsers, setAssignedUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [developers, setDevelopers] = useState([]);
+  const [projectLeaderEmail, setProjectLeaderEmail] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  
+  const [confirmData, setConfirmData] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [newUser, setNewUser] = useState("");
-  const [newPerms, setNewPerms] = useState({
-    view: true,
-    download: false,
-    upload: false
-  });
+  const [tempSelectedDevs, setTempSelectedDevs] = useState([]);
 
-  // ---- NUEVOS ESTADOS DEL HISTORIAL ----
-  const [changeLog, setChangeLog] = useState([
-    {
-      user: "@PandaKiller",
-      email: "panda@example.com",
-      date: "2025-12-02",
-      file: "update_v2.zip"
-    },
-    {
-      user: "@angel_grx",
-      email: "angel@example.com",
-      date: "2025-12-01",
-      file: "fix_01.patch"
-    }
-  ]);
-
+  const [changeLog, setChangeLog] = useState([]);
   const [showToast, setShowToast] = useState(false);
+
+  // Cargar lista de desarrolladores disponibles
+  useEffect(() => {
+    const fetchDevelopers = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        
+        const response = await fetch("http://localhost:8080/api/users/developers", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al obtener la lista de desarrolladores");
+        }
+
+        const data = await response.json();
+        setDevelopers(data);
+      } catch (err) {
+        console.error("Error al cargar desarrolladores:", err);
+      }
+    };
+
+    fetchDevelopers();
+  }, []);
+
+  // Cargar datos del proyecto y su historial
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const userEmail = localStorage.getItem("userEmail");
+        const adminEmailStored = localStorage.getItem("userEmail"); // Email del usuario logueado (admin)
+        setAdminEmail(adminEmailStored || "");
+
+        if (!userEmail) {
+          throw new Error("No se encontró el email del usuario");
+        }
+
+        // 1. Obtener lista de proyectos con developers
+        const listResponse = await fetch(
+          `http://localhost:8080/api/projects/ceo/list?email=${encodeURIComponent(userEmail)}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!listResponse.ok) {
+          throw new Error("Error al obtener la lista de proyectos");
+        }
+
+        const projects = await listResponse.json();
+        const projectData = Array.isArray(projects) 
+          ? projects.find(p => p.projectId?.toString() === projectName)
+          : null;
+
+        if (!projectData) {
+          throw new Error("Proyecto no encontrado");
+        }
+
+        // 2. Obtener historial del proyecto
+        const detailResponse = await fetch(
+          `http://localhost:8080/api/projects/${projectName}/detail`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!detailResponse.ok) {
+          throw new Error("Error al obtener el historial del proyecto");
+        }
+
+        const detailData = await detailResponse.json();
+
+        // Setear datos del proyecto
+        setName(projectData.name);
+        setDescription(projectData.description);
+        setProjectLeaderEmail(projectData.ownerEmail || "");
+        
+        // Convertir developers a formato de assignedUsers
+        const users = projectData.developers && Array.isArray(projectData.developers) 
+          ? projectData.developers.map(dev => ({
+              username: dev.fullName,
+              email: dev.email
+            }))
+          : [];
+        
+        setAssignedUsers(users);
+
+        // Cargar historial de cambios
+        if (detailData.history && Array.isArray(detailData.history)) {
+          const history = detailData.history.map(h => ({
+            user: h.developerName,
+            email: h.email,
+            date: h.uploadDate,
+            file: h.fileName,
+            uploadId: h.uploadId
+          }));
+          setChangeLog(history);
+        }
+        
+      } catch (err) {
+        console.error("Error:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjectData();
+  }, [projectName]);
+
+  // ---- FUNCIÓN PARA DESCARGAR UPLOAD DEL HISTORIAL ----
+  async function handleDownloadUpload(uploadId, fileName) {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `http://localhost:8080/api/projects/${projectName}/download-upload?uploadId=${uploadId}`,
+        {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al descargar el archivo");
+      }
+
+      // Descargar el archivo
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName || `upload_${uploadId}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Error al descargar el archivo: " + err.message);
+    }
+  }
+
+  // ---- FUNCIÓN PARA GUARDAR CAMBIOS DEL PROYECTO ----
+  async function handleSaveProject() {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const payload = {
+        name: name,
+        description: description
+      };
+
+      const response = await fetch(
+        `http://localhost:8080/api/projects/${projectName}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al actualizar el proyecto");
+      }
+
+      alert("Proyecto actualizado exitosamente");
+      
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Error al actualizar el proyecto: " + err.message);
+    }
+  }
+
+  // ---- FUNCIÓN PARA RESGUARDAR (SEAL) UN UPLOAD ----
+  async function handleSealUpload(uploadId) {
+    const confirmSeal = window.confirm("¿Estás seguro de resguardar este cambio?");
+    if (!confirmSeal) return;
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const sealedByEmail = localStorage.getItem("userEmail");
+
+      // Lista de correos que podrán descifrar: CEO (admin) y líder del proyecto
+      const ceoEmail = "admin@protecting-software.com";
+      const allowedEmails = [ceoEmail, projectLeaderEmail].filter(email => email);
+
+      if (allowedEmails.length === 0) {
+        throw new Error("No se pudieron determinar los correos autorizados");
+      }
+
+      console.log("Emails autorizados para descifrar:", allowedEmails);
+
+      const response = await fetch(
+        `http://localhost:8080/api/projects/${projectName}/seal?uploadId=${uploadId}&sealedByEmail=${encodeURIComponent(sealedByEmail)}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify(allowedEmails)
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al resguardar el cambio");
+      }
+
+      alert("Cambio resguardado exitosamente");
+      
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Error al resguardar: " + err.message);
+    }
+  }
 
   // ---- FUNCIÓN PARA VALIDAR CAMBIO ----
   async function validarCambio(cambio) {
@@ -69,23 +290,133 @@ export default function EditProject() {
   }
 
   // ---- FUNCIONES EXISTENTES ----
-  function removeUser(username) {
-    setAssignedUsers(assignedUsers.filter(u => u.username !== username));
+  async function removeUser(username) {
+    const userToRemove = assignedUsers.find(u => u.username === username);
+    if (!userToRemove) return;
+
+    const confirmRemove = window.confirm(`¿Estás seguro de eliminar a ${username} del proyecto?`);
+    if (!confirmRemove) return;
+
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `http://localhost:8080/api/projects/${projectName}/developers?developerEmail=${encodeURIComponent(userToRemove.email)}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al eliminar desarrollador");
+      }
+
+      // Actualizar la lista local
+      setAssignedUsers(assignedUsers.filter(u => u.username !== username));
+      alert("Desarrollador eliminado exitosamente");
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Error al eliminar desarrollador: " + err.message);
+    }
   }
 
-  function addUser() {
-    if (!newUser) return alert("Select a user.");
-    setAssignedUsers([...assignedUsers, { username: newUser, ...newPerms }]);
-    setShowModal(false);
+  // Agregar desarrollador a la lista temporal del modal
+  function handleAddDevToModal() {
+    if (newUser) {
+      const dev = developers.find(d => d.email === newUser);
+      if (dev && !tempSelectedDevs.includes(newUser) && !assignedUsers.some(u => u.email === newUser)) {
+        setTempSelectedDevs([...tempSelectedDevs, newUser]);
+      }
+      setNewUser("");
+    }
+  }
+
+  // Quitar desarrollador de la lista temporal
+  function handleRemoveDevFromModal(emailToRemove) {
+    setTempSelectedDevs(tempSelectedDevs.filter(email => email !== emailToRemove));
+  }
+
+  // Obtener nombre del desarrollador por email
+  function getDevName(email) {
+    const dev = developers.find(d => d.email === email);
+    return dev ? dev.fullName : email;
+  }
+
+  // Confirmar y agregar todos los desarrolladores seleccionados
+  async function addUser() {
+    if (tempSelectedDevs.length === 0) {
+      alert("Selecciona al menos un desarrollador");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(
+        `http://localhost:8080/api/projects/${projectName}/developers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify(tempSelectedDevs)
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al agregar desarrolladores");
+      }
+
+      // Actualizar la lista local
+      const newUsers = tempSelectedDevs.map(email => {
+        const dev = developers.find(d => d.email === email);
+        return { username: dev.fullName, email: dev.email };
+      });
+      setAssignedUsers([...assignedUsers, ...newUsers]);
+      setTempSelectedDevs([]);
+      setNewUser("");
+      setShowModal(false);
+      
+      alert("Desarrolladores agregados exitosamente");
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Error al agregar desarrolladores: " + err.message);
+    }
+  }
+
+  // Cancelar y limpiar selección temporal
+  function cancelAddUser() {
+    setTempSelectedDevs([]);
     setNewUser("");
-    setNewPerms({ view: true, download: false, upload: false });
+    setShowModal(false);
   }
 
-  function updatePermission(username, perm) {
-    setAssignedUsers(
-      assignedUsers.map(u =>
-        u.username === username ? { ...u, [perm]: !u[perm] } : u
-      )
+
+
+  if (loading) {
+    return (
+      <div className="addproject-page">
+        <div className="addproject-card">
+          <p>Cargando proyecto...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="addproject-page">
+        <div className="addproject-card">
+          <h2>Error</h2>
+          <p style={{ color: "red" }}>{error}</p>
+        </div>
+      </div>
     );
   }
 
@@ -111,6 +442,9 @@ export default function EditProject() {
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
 
+        {/* Botón de guardar cambios */}
+        <button className="btn-submit" onClick={handleSaveProject}>Save changes</button>
+
         {/* Tabla de usuarios asignados */}
         <h3 className="sub-title">Assigned developers</h3>
 
@@ -119,9 +453,7 @@ export default function EditProject() {
             <thead>
               <tr>
                 <th>User</th>
-                <th>View</th>
-                <th>Download</th>
-                <th>Upload</th>
+                <th>Email</th>
                 <th>Remove</th>
               </tr>
             </thead>
@@ -129,33 +461,8 @@ export default function EditProject() {
             <tbody>
               {assignedUsers.map((u) => (
                 <tr key={u.username}>
-
                   <td>{u.username}</td>
-
-                  <td style={{ textAlign: "center" }}>
-                    <input 
-                      type="checkbox"
-                      checked={u.view}
-                      onChange={() => updatePermission(u.username, "view")}
-                    />
-                  </td>
-
-                  <td style={{ textAlign: "center" }}>
-                    <input 
-                      type="checkbox"
-                      checked={u.download}
-                      onChange={() => updatePermission(u.username, "download")}
-                    />
-                  </td>
-
-                  <td style={{ textAlign: "center" }}>
-                    <input 
-                      type="checkbox"
-                      checked={u.upload}
-                      onChange={() => updatePermission(u.username, "upload")}
-                    />
-                  </td>
-
+                  <td>{u.email}</td>
                   <td style={{ textAlign: "center" }}>
                     <button
                       className="remove-btn"
@@ -164,7 +471,6 @@ export default function EditProject() {
                       Remove
                     </button>
                   </td>
-
                 </tr>
               ))}
             </tbody>
@@ -190,7 +496,8 @@ export default function EditProject() {
                 <th>Email</th>
                 <th>Fecha</th>
                 <th>Archivo</th>
-                <th>Validar</th>
+                <th>Descargar</th>
+                <th>Resguardar</th>
               </tr>
             </thead>
 
@@ -202,15 +509,20 @@ export default function EditProject() {
                   <td>{c.date}</td>
                   <td>{c.file}</td>
                   <td style={{ textAlign: "center" }}>
-                  <button
-                    className="validate-btn"
-                    onClick={() => {
-                      setConfirmData(c);
-                      setShowConfirmModal(true);
-                    }}
-                  >
-                    Validar
-                  </button>
+                    <button
+                      className="btn-download"
+                      onClick={() => handleDownloadUpload(c.uploadId, c.file)}
+                    >
+                      Download
+                    </button>
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    <button
+                      className="validate-btn"
+                      onClick={() => handleSealUpload(c.uploadId)}
+                    >
+                      Resguardar
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -218,8 +530,6 @@ export default function EditProject() {
           </table>
         </div>
 
-        {/* Botón general */}
-        <button className="btn-submit">Save changes</button>
       </div>
 
       {/* Modal */}
@@ -231,58 +541,55 @@ export default function EditProject() {
 
             <label>Select user</label>
             <select
-              value={newUser}
-              onChange={(e) => setNewUser(e.target.value)}
+              value=""
+              onChange={(e) => {
+                const selectedEmail = e.target.value;
+                if (selectedEmail) {
+                  const dev = developers.find(d => d.email === selectedEmail);
+                  if (dev && !tempSelectedDevs.includes(selectedEmail) && !assignedUsers.some(u => u.email === selectedEmail)) {
+                    setTempSelectedDevs([...tempSelectedDevs, selectedEmail]);
+                  }
+                }
+              }}
             >
-              <option value="">Select…</option>
-              <option>@PandaKiller</option>
-              <option>@hdez.ado</option>
-              <option>@angel_grx</option>
+              <option value="">Select developer to add…</option>
+              {developers
+                .filter(dev => 
+                  !assignedUsers.some(u => u.email === dev.email) &&
+                  !tempSelectedDevs.includes(dev.email)
+                )
+                .map(dev => (
+                  <option key={dev.email} value={dev.email}>
+                    {dev.fullName} ({dev.email})
+                  </option>
+                ))}
             </select>
 
-            <label>Permissions</label>
-            <div className="perm-box">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={newPerms.view}
-                  onChange={() =>
-                    setNewPerms({ ...newPerms, view: !newPerms.view })
-                  }
-                />
-                View
-              </label>
-
-              <label>
-                <input
-                  type="checkbox"
-                  checked={newPerms.download}
-                  onChange={() =>
-                    setNewPerms({ ...newPerms, download: !newPerms.download })
-                  }
-                />
-                Download
-              </label>
-
-              <label>
-                <input
-                  type="checkbox"
-                  checked={newPerms.upload}
-                  onChange={() =>
-                    setNewPerms({ ...newPerms, upload: !newPerms.upload })
-                  }
-                />
-                Upload
-              </label>
-            </div>
+            {/* Lista de desarrolladores seleccionados temporalmente */}
+            {tempSelectedDevs.length > 0 && (
+              <div className="selected-devs-list" style={{ marginTop: "15px" }}>
+                {tempSelectedDevs.map((email) => (
+                  <div key={email} className="dev-tag">
+                    <span>{getDevName(email)}</span>
+                    <button 
+                      type="button"
+                      className="remove-dev-btn"
+                      onClick={() => handleRemoveDevFromModal(email)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <button className="modal-btn" onClick={addUser}>
-              Add
+              Add selected ({tempSelectedDevs.length})
             </button>
 
             <button
               className="modal-close"
-              onClick={() => setShowModal(false)}
+              onClick={cancelAddUser}
             >
               Cancel
             </button>

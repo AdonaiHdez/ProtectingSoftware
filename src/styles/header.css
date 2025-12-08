@@ -32,3 +32,21 @@
 .header-nav a:hover {
   color: #1e3945;
 }
+
+.logout-btn {
+  margin-left: 20px;
+  background-color: transparent;
+  border: 1px solid #444;
+  color: #444;
+  padding: 6px 16px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #1e3945;
+  color: #fff;
+  border-color: #1e3945;
+}

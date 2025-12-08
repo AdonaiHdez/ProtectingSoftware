@@ -7,7 +7,8 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [privateKeyMsg, setPrivateKeyMsg] = useState("");
-  const [showModal, setShowModal] = useState(false); //
+  const [publicKeyMsg, setPublicKeyMsg] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   async function generarLlaves() {
     const keyPair = await window.crypto.subtle.generateKey(
@@ -41,39 +42,63 @@ export default function SignUp() {
   }
 
   // 🟦 2. Handler del botón
-async function handleSignUp() {
-  if (password !== passwordConfirm) {
-    alert("Las contraseñas no coinciden");
-    return;
+  async function handleSignUp() {
+    if (password !== passwordConfirm) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    if (!fullName || !email || !password) {
+      alert("Por favor completa todos los campos");
+      return;
+    }
+
+    try {
+      // Generar llaves
+      const { privateKeyBase64, publicKeyBase64 } = await generarLlaves();
+
+      // Crear JSON para el backend
+      const body = {
+        fullName: fullName,
+        email: email,
+        password: password,
+        publicKey: publicKeyBase64,
+      };
+
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al registrar usuario");
+      }
+
+      const data = await response.json();
+      console.log("Usuario registrado exitosamente:", data);
+
+      // 👉 MOSTRAR AMBAS LLAVES
+      console.log("\n=== LLAVES GENERADAS ===");
+      console.log("Llave PÚBLICA (enviada al backend):");
+      console.log(publicKeyBase64);
+      console.log("\nLlave PRIVADA (GUARDAR EN LUGAR SEGURO):");
+      console.log(privateKeyBase64);
+      console.log("\nPrimeros 50 chars de la pública:", publicKeyBase64.substring(0, 50));
+      console.log("Primeros 50 chars de la privada:", privateKeyBase64.substring(0, 50));
+      console.log("========================\n");
+
+      setPrivateKeyMsg(privateKeyBase64);
+      setPublicKeyMsg(publicKeyBase64);
+
+      // 👉 ABRIR EL MODAL
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      alert(error.message || "Error al conectar con el servidor");
+    }
   }
-
-  // Generar llaves
-  const { privateKeyBase64, publicKeyBase64 } = await generarLlaves();
-
-  // Crear JSON para el backend
-  const body = {
-    name: fullName,
-    email: email,
-    password: password,
-    publicKey: publicKeyBase64,
-  };
-
-  try {
-    await fetch("http://localhost:3000/api/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-  } catch (e) {
-    console.warn("Backend no disponible, pero seguimos…");
-  }
-
-  // 👉 MOSTRAR LA LLAVE PRIVADA SIEMPRE
-  setPrivateKeyMsg(privateKeyBase64);
-
-  // 👉 ABRIR EL MODAL
-  setShowModal(true);
-}
 
 
   return (
@@ -116,19 +141,54 @@ async function handleSignUp() {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Usuario creado con éxito</h2>
+            <h2>✅ Usuario creado con éxito</h2>
 
-            <p>Tu llave privada:</p>
+            <p style={{ marginTop: "20px", fontWeight: "bold", color: "#333" }}>
+              Llave PÚBLICA (enviada al backend):
+            </p>
+            <textarea
+              readOnly
+              className="private-key-area"
+              value={publicKeyMsg}
+              style={{ 
+                minHeight: "80px", 
+                fontSize: "11px", 
+                fontFamily: "monospace",
+                backgroundColor: "#e8f5e9"
+              }}
+            />
+            <button
+              className="copy-btn"
+              onClick={() => {
+                navigator.clipboard.writeText(publicKeyMsg);
+                alert("Llave pública copiada");
+              }}
+              style={{ marginBottom: "20px" }}
+            >
+              Copiar llave pública
+            </button>
 
+            <p style={{ fontWeight: "bold", color: "#d32f2f" }}>
+              ⚠️ Llave PRIVADA (GUÁRDALA EN LUGAR SEGURO):
+            </p>
             <textarea
               readOnly
               className="private-key-area"
               value={privateKeyMsg}
+              style={{ 
+                minHeight: "120px", 
+                fontSize: "11px", 
+                fontFamily: "monospace",
+                backgroundColor: "#fff3e0"
+              }}
             />
 
             <button
               className="copy-btn"
-              onClick={() => navigator.clipboard.writeText(privateKeyMsg)}
+              onClick={() => {
+                navigator.clipboard.writeText(privateKeyMsg);
+                alert("Llave privada copiada al portapapeles");
+              }}
             >
               Copiar llave privada
             </button>

@@ -103,14 +103,35 @@
   background: #7aa8d0;
   color: white;
   text-decoration: none;
+  border: none;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
+  cursor: pointer;
   transition: 0.2s;
 }
 
 .btn-download:hover {
   background: #658bad;
+}
+
+/* ===== BADGES DE VERIFICACIÓN ===== */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-badge.verified {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.not-verified {
+  background-color: #fff3cd;
+  color: #856404;
 }
 
 /* ===== TEXTO NO VALIDADO ===== */

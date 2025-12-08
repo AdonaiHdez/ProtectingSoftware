@@ -70,3 +70,52 @@
 .btn-submit:hover {
   background: #5b97c7;
 }
+
+/* Lista de desarrolladores seleccionados */
+.selected-devs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  min-height: 50px;
+}
+
+.dev-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #6fa8d8;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.dev-tag span {
+  font-weight: 500;
+}
+
+.remove-dev-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.remove-dev-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

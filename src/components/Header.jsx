@@ -1,8 +1,21 @@
 import "../styles/header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Limpiar datos de sesión
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    
+    // Redirigir al login
+    navigate("/login");
+  };
+
   return (
     <header className="header">
       <div className="header-content">
@@ -11,7 +24,9 @@ export default function Header() {
 
         <nav className="header-nav">
           <Link to="/proyectos">Projects</Link>
-          <Link to="/contactus">Contact us</Link>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
         </nav>
 
       </div>

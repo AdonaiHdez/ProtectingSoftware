@@ -5,7 +5,8 @@
   padding: 35px 40px;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.10);
-  width: 800px;
+  max-width: 1400px;
+  width: 95%;
   margin: auto;
 }
 
@@ -41,6 +42,7 @@
   margin-top: 20px;
   border-radius: 10px;
   overflow: hidden;
+  table-layout: fixed;
 }
 
 /* Encabezados */
@@ -49,7 +51,8 @@
   color: white;
   padding: 14px;
   text-align: left;
-  font-size: 15px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 /* Filas */
@@ -63,11 +66,14 @@
 
 /* Celdas */
 .users-table td {
-  padding: 14px;
+  padding: 10px;
   border-bottom: 1px solid #ececec;
   color: #1e3945;
-  font-size: 15px;
+  font-size: 13px;
   vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Última fila sin borde */
@@ -83,11 +89,44 @@
   border: none;
   color: white;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .remove-btn:hover {
   background: #d86060;
+}
+
+/* Botón download */
+.btn-download {
+  background: #7aa8d0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.btn-download:hover {
+  background: #658bad;
+}
+
+/* Botón validar/resguardar */
+.validate-btn {
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #7aa8d0;
+  color: #7aa8d0;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.validate-btn:hover {
+  background: #f0f7ff;
 }
 
 /* Botón Add User */

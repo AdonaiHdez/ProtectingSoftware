@@ -114,3 +114,82 @@
   background: #658bad;
 }
 
+/* === ENLACES DEL NOMBRE DEL PROYECTO === */
+.project-link {
+  color: #1e3945;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.project-link:hover {
+  text-decoration: underline;
+  color: #7aa8d0;
+}
+
+/* === BADGES DE STATUS === */
+.status-badge {
+  display: inline-block;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  min-width: 100px;
+}
+
+.status-open {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-closed {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+.status-in_progress {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.status-unknown {
+  background-color: #e0e0e0;
+  color: #616161;
+}
+
+.status-sealed {
+  background-color: #b39ddb;
+  color: #4527a0;
+}
+
+/* === BOTONES DE ACCIÓN === */
+.btn-download {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.btn-download:hover {
+  background-color: #1976d2;
+}
+
+.btn-edit {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.btn-edit:hover {
+  background-color: #388e3c;
+}
