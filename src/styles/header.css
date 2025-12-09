@@ -1,7 +1,7 @@
 /* === HEADER MODERNO === */
 
 .header {
-  background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+  background: linear-gradient(135deg, #1F3C4A 0%, #1F3C4A 100%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 16px 0;
   position: sticky;
@@ -48,7 +48,7 @@
 }
 
 .logout-btn {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background: linear-gradient(135deg, #1F3C4A 0%, #1F3C4A 100%);
   border: none;
   color: #ffffff;
   padding: 10px 24px;
