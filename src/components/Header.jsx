@@ -1,9 +1,17 @@
 import "../styles/header.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 
 export default function Header() {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Verificar si hay token en localStorage
+    const token = localStorage.getItem("authToken");
+    setIsLoggedIn(!!token);
+  }, []);
 
   const handleLogout = () => {
     // Limpiar datos de sesión
@@ -12,7 +20,13 @@ export default function Header() {
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
     
+    setIsLoggedIn(false);
+    
     // Redirigir al login
+    navigate("/login");
+  };
+
+  const handleLogin = () => {
     navigate("/login");
   };
 
@@ -23,10 +37,15 @@ export default function Header() {
         <h1 className="header-title">Protecting Software</h1>
 
         <nav className="header-nav">
-          <Link to="/proyectos">Projects</Link>
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
-          </button>
+          {isLoggedIn ? (
+            <button onClick={handleLogout} className="logout-btn">
+              Cerrar sesión
+            </button>
+          ) : (
+            <button onClick={handleLogin} className="logout-btn">
+              Iniciar sesión
+            </button>
+          )}
         </nav>
 
       </div>

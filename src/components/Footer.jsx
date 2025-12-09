@@ -1,9 +1,11 @@
-import "../styles/header.css";
+import "../styles/footer.css";
 
 export default function Footer() {
   return (
-    <footer>
-      © {new Date().getFullYear()} Protecting software — Todos los cripto-derechos cripto-reservados.
+    <footer className="footer">
+      <div className="footer-content">
+        <p>© {new Date().getFullYear()} Protecting Software — Todos los derechos reservados</p>
+      </div>
     </footer>
   );
 }

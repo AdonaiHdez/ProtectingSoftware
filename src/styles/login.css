@@ -1,7 +1,7 @@
 
 .login-page {
   display: flex;
-  height: calc(100vh - 70px); /* 70px = espacio para header */
+  flex: 1;
 }
 
 

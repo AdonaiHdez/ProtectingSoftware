@@ -257,8 +257,6 @@ export default function Proyectos() {
         <Link to="/addproject">
           <button className="btn-primary">Add project</button>
         </Link>
-
-        <button className="btn-danger">Delete project</button>
       </div>
     </div>
   );

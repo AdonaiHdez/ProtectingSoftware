@@ -1,3 +1,16 @@
+/* Layout principal con 100vh */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .App {
   text-align: center;
 }

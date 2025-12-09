@@ -137,13 +137,13 @@ export default function SignUp() {
         <button onClick={handleSignUp}>Add user</button>
       </div>
 
-      {/* ✅ MODAL CORRECTAMENTE DENTRO DEL RETURN */}
+      {/* MODAL CORRECTAMENTE DENTRO DEL RETURN */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>✅ Usuario creado con éxito</h2>
+            <h2>Usuario creado con éxito</h2>
 
-            <p style={{ marginTop: "20px", fontWeight: "bold", color: "#333" }}>
+            <p style={{ marginTop: "20px", color: "#2193b0" }}>
               Llave PÚBLICA (enviada al backend):
             </p>
             <textarea
@@ -151,10 +151,7 @@ export default function SignUp() {
               className="private-key-area"
               value={publicKeyMsg}
               style={{ 
-                minHeight: "80px", 
-                fontSize: "11px", 
-                fontFamily: "monospace",
-                backgroundColor: "#e8f5e9"
+                minHeight: "100px"
               }}
             />
             <button
@@ -163,23 +160,19 @@ export default function SignUp() {
                 navigator.clipboard.writeText(publicKeyMsg);
                 alert("Llave pública copiada");
               }}
-              style={{ marginBottom: "20px" }}
             >
               Copiar llave pública
             </button>
 
-            <p style={{ fontWeight: "bold", color: "#d32f2f" }}>
-              ⚠️ Llave PRIVADA (GUÁRDALA EN LUGAR SEGURO):
+            <p style={{ color: "#1e3c72", marginTop: "12px" }}>
+              Llave PRIVADA (GUÁRDALA EN LUGAR SEGURO):
             </p>
             <textarea
               readOnly
               className="private-key-area"
               value={privateKeyMsg}
               style={{ 
-                minHeight: "120px", 
-                fontSize: "11px", 
-                fontFamily: "monospace",
-                backgroundColor: "#fff3e0"
+                minHeight: "140px"
               }}
             />
 

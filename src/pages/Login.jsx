@@ -92,11 +92,6 @@ export default function Login() {
               {loading ? "Cargando..." : "Login"}
             </button>
           </form>
-
-          <p>
-            Forgot password?
-            <Link to="/contactus" style={{ marginLeft: 4 }}>Contact us</Link>
-          </p>
         </div>
       </div>
 

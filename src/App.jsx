@@ -8,24 +8,28 @@ import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
 import MisProyectosDev from "./pages/MisProyectos";
 import ProjectDetail from "./pages/ProyectDetail";
+import "./App.css";
+
 function App() {
   return (
-    <>
+    <div className="app-container">
       <Header />
       
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/proyectos" element={<Proyectos/>} />
-        <Route path="/addproject" element={<AddProject/>} />
-        <Route path="/editproject/:projectName" element={<EditProject />} />
-        <Route path="/dev/projects" element={<MisProyectosDev/>} />
-        <Route path="/dev/project/:projectName" element={<ProjectDetail />} />
-      </Routes>
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/proyectos" element={<Proyectos/>} />
+          <Route path="/addproject" element={<AddProject/>} />
+          <Route path="/editproject/:projectName" element={<EditProject />} />
+          <Route path="/dev/projects" element={<MisProyectosDev/>} />
+          <Route path="/dev/project/:projectName" element={<ProjectDetail />} />
+        </Routes>
+      </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
 
